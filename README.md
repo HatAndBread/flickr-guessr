@@ -1,24 +1,11 @@
-# flickr-guessr
+# flickr-geoguessr
 
-## Project setup
-```
-yarn install
-```
+A poor person's <a href ="https://www.geoguessr.com/">Geoguesser</a>. I didn't want to pay for the full version so decided to build my own.
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+## Technology 🤓
 
-### Compiles and minifies for production
-```
-yarn build
-```
+TypeScript
+Vue
+Mapbox GL
+Flickr API
 
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
