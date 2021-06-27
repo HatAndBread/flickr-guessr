@@ -1,17 +1,28 @@
 <template>
   <div class="home">
-    <Landing msg="Welcome to Your Vue.js App adflaskjfkldjasf" />
+    <Landing
+      msg="Welcome to Your Vue.js App adflaskjfkldjasf"
+      :userName="store.state.userName"
+    />
+    <Image :src="earth" alt="foo-foo" width="50" />
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
-import Landing from "@/components/Landing";
+<script lang="ts">
+import Landing from "@/components/Landing.vue";
+import Image from "@/components/Image.vue";
+import { defineComponent } from "vue";
+import { store, Store } from "@/store";
+import earth from "../assets/planet-earth.svg";
 
-export default {
+export default defineComponent({
   name: "Home",
   components: {
     Landing,
+    Image,
   },
-};
+  data(): { store: Store; earth: string } {
+    return { store, earth };
+  },
+});
 </script>

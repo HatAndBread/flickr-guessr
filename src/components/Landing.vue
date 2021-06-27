@@ -3,22 +3,24 @@
     <h1 class="landing-title">Flickr Geoguessr</h1>
     <p class="landing-explanation"></p>
     <h1>{{ msg }}</h1>
-    <p class="fuck" v-bind:title="msg">{{ apiKey }} asfsadsfds</p>
+    <p class="" v-bind:title="msg">{{ userName }} asfsadsfds</p>
+    <button @click="doStuff">Click me</button>
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import { store } from '../store';
 
 export default defineComponent({
   name: "Landing",
   props: {
     msg: String,
-    apiKey: String,
+    userName: String,
   },
   methods: {
     doStuff: () => {
-      console.log("shit");
+      store.setUserName(`Idiot ${Math.floor(Math.random()* 1000)}`)
     },
   },
 });
