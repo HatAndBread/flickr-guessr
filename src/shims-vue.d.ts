@@ -16,3 +16,5 @@ declare module '*.png' {
   const content: VueConstructor<Vue>;
   export default content;
 }
+
+declare module "vue-mapbox";
