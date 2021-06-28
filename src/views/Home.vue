@@ -5,7 +5,7 @@
       :userName="store.state.userName"
     />
     <Image :src="earth" alt="foo-foo" width="50" />
-    <Map />
+    <Map :zoom="8" />
   </div>
 </template>
 

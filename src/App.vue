@@ -8,6 +8,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import Nav from "./components/Nav.vue";
+import "./globalCss.css";
 
 export default defineComponent({
   components: {

@@ -16,29 +16,38 @@ export default defineComponent({
       map: null,
     };
   },
+  props: {
+    zoom: Number,
+    onMapClick: Function,
+  },
   mounted: function() {
-    console.log("Hello!");
     this.map = new mapbox.Map({
       container: "map",
-      style: "mapbox://styles/mapbox/satellite-v9",
+      style: "mapbox://styles/mapbox/streets-v11",
       center: [140.0, 38.2],
-      zoom: 9,
+      zoom: this.zoom,
       maxZoom: 18,
     });
-    console.log("hey the map updated", this.map);
-  },
-  updated: function() {
-    console.log("hey the map updated", this.map);
+    this.map.on("click", (e) => {
+      if (typeof this.onMapClick === "function") {
+        this.onMapClick({ lat: e.lngLat.lat, lng: e.lngLat.lng });
+      }
+    });
   },
 });
 </script>
 
 <style scoped>
+.map-container {
+  display: flex;
+  justify-content: center;
+}
 #map {
   position: relative;
   top: 0;
   bottom: 0;
-  width: 100%;
+  width: 90%;
   height: 50vh;
+  border-radius: 16px;
 }
 </style>
