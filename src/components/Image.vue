@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="hasError">{{ alt }}</div>
-    <img :src="src" :alt="alt" @error="onError" v-else :width="getWidth" />
+    <img :src="src" :alt="alt" @error="onError" :width="getWidth" v-else />
   </div>
 </template>
 

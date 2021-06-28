@@ -9,8 +9,8 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import { store } from '../store';
+import { defineComponent } from "vue";
+import { store } from "../store";
 
 export default defineComponent({
   name: "Landing",
@@ -20,7 +20,7 @@ export default defineComponent({
   },
   methods: {
     doStuff: () => {
-      store.setUserName(`Idiot ${Math.floor(Math.random()* 1000)}`)
+      store.setUserName(`Idiot ${Math.floor(Math.random() * 1000)}`);
     },
   },
 });
