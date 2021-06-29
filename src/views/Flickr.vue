@@ -21,7 +21,7 @@
     <img :src="largeImageUrl" />
   </div>
   <p v-if="distanceAway">{{ distanceAway }} km away!</p>
-  <Map :zoom="1" :onMapClick="handleMapClick" />
+  <Map :zoom="1" :onMapClick="handleMapClick" :answerCoords="answerCoords" />
 </template>
 
 <script lang="ts">
@@ -29,9 +29,7 @@ import { defineComponent, ref } from "vue";
 import { getPictures } from "./Flickr/getPictures";
 import { getUrlString } from "./Flickr/getUrlString";
 import { LatLngPhoto } from "../types/flickrTypes";
-import { getRandomCoordsWithinRadius } from "./Flickr/getRandomCoords";
 import { getDistanceBetween } from "./Flickr/getDistanceBetween";
-import { getRandomUrls } from "./Flickr/getRandomUrls";
 import { getRandomCoordsAndPictures } from "./Flickr/getRandomCoordsAndPictures";
 import Map from "@/components/Map.vue";
 import Image from "@/components/Image.vue";
@@ -48,14 +46,14 @@ export default defineComponent({
     const distanceAway = ref<null | string>(null);
     const imageErrorCallback = () => (apiError.value = true);
     const largeImageUrl = ref<null | string>(null);
-    const latLngAnswer = ref<null | { lat: number; lng: number }>(null);
+    const answerCoords = ref<{ lat: number; lng: number }>({ lat: 0, lng: 0 });
     const handleMapClick = (lngLat: { lat: number; lng: number }) => {
-      if (latLngAnswer.value) {
+      if (answerCoords.value) {
         distanceAway.value = getDistanceBetween(
           lngLat.lat,
           lngLat.lng,
-          latLngAnswer.value.lat,
-          latLngAnswer.value.lng
+          answerCoords.value.lat,
+          answerCoords.value.lng
         ).toFixed(0);
       }
     };
@@ -64,9 +62,7 @@ export default defineComponent({
     };
     const closeModal = () => (largeImageUrl.value = null);
     const startGame = async () => {
-      const { coords, pictures } = await getRandomCoordsAndPictures();
-      latLngAnswer.value = coords;
-      imageUrls.value = getRandomUrls(pictures);
+      await getRandomCoordsAndPictures(answerCoords, imageUrls);
       const interval = setInterval(() => {
         if (currentTime.value < 10) {
           currentTime.value += 1;
@@ -85,7 +81,7 @@ export default defineComponent({
       imageClick,
       largeImageUrl,
       closeModal,
-      latLngAnswer,
+      answerCoords,
       handleMapClick,
       distanceAway,
     };

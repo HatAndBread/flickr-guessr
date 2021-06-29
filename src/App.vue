@@ -8,7 +8,10 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import Nav from "./components/Nav.vue";
+import { internet } from "faker";
 import "./globalCss.css";
+
+console.log(internet.ip());
 
 export default defineComponent({
   components: {

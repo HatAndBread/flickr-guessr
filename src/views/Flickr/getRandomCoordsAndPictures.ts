@@ -1,7 +1,11 @@
 import cities from "./cities.json";
 import { getPictures } from "./getPictures";
+import { getRandomUrls } from "./getRandomUrls";
 
-export const getRandomCoordsAndPictures = async () => {
+export const getRandomCoordsAndPictures = async (
+  latLngAnswer: any,
+  imageUrls: any
+) => {
   let coords = getRandomCoordsWithinRadius(4);
   let pictures = await getPictures(coords);
   while (pictures.photos.photo.length < 6) {
@@ -9,6 +13,8 @@ export const getRandomCoordsAndPictures = async () => {
     coords = getRandomCoordsWithinRadius(2);
     pictures = await getPictures(coords);
   }
+  latLngAnswer.value = coords;
+  imageUrls.value = getRandomUrls(pictures);
   return { coords, pictures };
 };
 
