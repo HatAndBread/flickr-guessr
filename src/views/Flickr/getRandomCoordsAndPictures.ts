@@ -8,7 +8,7 @@ export const getRandomCoordsAndPictures = async (
 ) => {
   let coords = getRandomCoordsWithinRadius(4);
   let pictures = await getPictures(coords);
-  while (pictures.photos.photo.length < 6) {
+  while (pictures.photos.photo.length < 4) {
     console.log("RETRIEVING AGAIN");
     coords = getRandomCoordsWithinRadius(2);
     pictures = await getPictures(coords);

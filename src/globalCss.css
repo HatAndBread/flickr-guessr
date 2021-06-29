@@ -26,6 +26,8 @@ body {
 .modal img {
   box-shadow: rgba(30, 30, 30, 0.8) 0px 0px 4px 4px;
   border-radius: 8px;
+  max-height: 90vh;
+  max-width: 90vw;
 }
 
 .modal-closer:hover {

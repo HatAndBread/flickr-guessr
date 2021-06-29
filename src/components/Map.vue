@@ -1,19 +1,21 @@
 <template>
-  <div class="map-container">
-    <div id="map"></div>
+  <div class="outer-container">
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+    <MapMarker
+      :map="map"
+      className="marker goal"
+      v-if="map"
+      :coords="answerLatLng"
+    />
+    <MapMarker
+      :map="map"
+      className="marker guess"
+      v-if="map"
+      :coords="guessCoords"
+    />
   </div>
-  <MapMarker
-    :map="map"
-    className="marker goal"
-    v-if="map"
-    :coords="answerLatLng"
-  />
-  <MapMarker
-    :map="map"
-    className="marker guess"
-    v-if="map"
-    :coords="guessCoords"
-  />
 </template>
 
 <script lang="ts">
@@ -72,17 +74,32 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
+.outer-container {
+  margin: 16px;
+  width: 600px;
+}
 .map-container {
   display: flex;
+  position: relative;
   justify-content: center;
+  align-items: center;
+  max-width: 600px;
+  height: 360px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 #map {
   position: relative;
   top: 0;
   bottom: 0;
-  width: 90%;
-  height: 50vh;
-  border-radius: 16px;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+@media only screen and (max-width: 1000px) {
+  .outer-container {
+    width: 90%;
+  }
 }
 </style>

@@ -65,9 +65,16 @@ export default defineComponent({
 .pointer {
   cursor: pointer;
 }
+.Image {
+  overflow: hidden;
+  margin: 0;
+  padding: 0px;
+}
 
 .Image img {
-  border-radius: 8px;
-  max-height: 80vh;
+  margin: 0;
+  padding: 0px;
+  max-height: 90vh;
+  max-width: 90vw;
 }
 </style>

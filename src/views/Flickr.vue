@@ -1,27 +1,34 @@
 <template>
-  <div></div>
-  <button @click="startGame">Start</button>
-  <p>{{ currentTime }}</p>
-  <div class="images-container">
-    <div v-if="apiError">There has been an error.</div>
-    <Image
-      v-for="(url, index) in imageUrls"
-      :key="index"
-      :src="url.url"
-      :originalItem="url.originalItem"
-      alt="error!"
-      :errorCallback="imageErrorCallback"
-      :showAltOnError="false"
-      :onClick="imageClick"
-      v-else
-    />
+  <div>
+    <button @click="startGame">Start</button>
+    <p>{{ currentTime }}</p>
+    <div class="image-map-container">
+      <div class="images-container" v-if="imageUrls.length > 0">
+        <div v-if="apiError">There has been an error.</div>
+        <Image
+          v-for="(url, index) in imageUrls"
+          :key="index"
+          :src="url.url"
+          :originalItem="url.originalItem"
+          alt="error!"
+          :errorCallback="imageErrorCallback"
+          :showAltOnError="false"
+          :onClick="imageClick"
+          v-else
+        />
+      </div>
+      <div class="modal large-image-modal" v-if="largeImageUrl">
+        <div class="modal-closer" @click="closeModal">x</div>
+        <img :src="largeImageUrl" />
+      </div>
+      <Map
+        :zoom="0"
+        :onMapClick="handleMapClick"
+        :answerCoords="answerCoords"
+      />
+    </div>
+    <p v-if="distanceAway">{{ distanceAway }} km away!</p>
   </div>
-  <div class="modal large-image-modal" v-if="largeImageUrl">
-    <div class="modal-closer" @click="closeModal">x</div>
-    <img :src="largeImageUrl" />
-  </div>
-  <p v-if="distanceAway">{{ distanceAway }} km away!</p>
-  <Map :zoom="1" :onMapClick="handleMapClick" :answerCoords="answerCoords" />
 </template>
 
 <script lang="ts">
@@ -90,13 +97,40 @@ export default defineComponent({
 </script>
 
 <style>
-.images-container {
+.image-map-container {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
+  width: 100vw;
 }
-.images-container img {
-  margin: 8px;
+.images-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 0;
+  column-count: 0;
+  margin: 16px;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 8px;
+  background-color: rgba(50, 50, 50, 0.7);
+  box-shadow: rgba(50, 50, 50, 0.7) 1px 1px 1px 1px;
+}
+.images-container .Image {
   cursor: pointer;
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+}
+@media only screen and (max-width: 1000px) {
+  .image-map-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>
