@@ -19,7 +19,7 @@
       </div>
       <div class="modal large-image-modal" v-if="largeImageUrl">
         <div class="modal-closer" @click="closeModal">x</div>
-        <img :src="largeImageUrl" />
+        <BigImage :src="largeImageUrl" />
       </div>
       <Map
         :zoom="0"
@@ -40,11 +40,13 @@ import { getDistanceBetween } from "./Flickr/getDistanceBetween";
 import { getRandomCoordsAndPictures } from "./Flickr/getRandomCoordsAndPictures";
 import Map from "@/components/Map.vue";
 import Image from "@/components/Image.vue";
+import BigImage from "@/components/BigImage.vue";
 export default defineComponent({
   name: "Flickr",
   components: {
     Image,
     Map,
+    BigImage,
   },
   setup() {
     let imageUrls = ref<{ url: string; originalItem: LatLngPhoto }[]>([]);
@@ -66,8 +68,14 @@ export default defineComponent({
     };
     const imageClick = function(item: LatLngPhoto) {
       largeImageUrl.value = getUrlString(item, "l");
+      document.body.style.height = `100vh`;
+      document.body.style.overflowY = `hidden`;
     };
-    const closeModal = () => (largeImageUrl.value = null);
+    const closeModal = () => {
+      largeImageUrl.value = null;
+      document.body.style.height = `initial`;
+      document.body.style.overflowY = `initial`;
+    };
     const startGame = async () => {
       await getRandomCoordsAndPictures(answerCoords, imageUrls);
       const interval = setInterval(() => {

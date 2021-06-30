@@ -17,7 +17,7 @@ body {
 .modal-closer {
   position: absolute;
   top: 0;
-  left: 95%;
+  left: 90%;
   font-size: 50px;
   color: white;
   cursor: pointer;
