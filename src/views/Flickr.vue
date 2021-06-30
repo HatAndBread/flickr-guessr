@@ -2,6 +2,8 @@
   <div>
     <button @click="startGame">Start</button>
     <p>{{ currentTime }}</p>
+    <p>Try: {{ roundNumber }}</p>
+    <Hearts :lives="lives" />
     <div class="image-map-container">
       <div class="images-container" v-if="imageUrls.length > 0">
         <div v-if="apiError">There has been an error.</div>
@@ -25,6 +27,8 @@
         :zoom="0"
         :onMapClick="handleMapClick"
         :answerCoords="answerCoords"
+        :showGoal="showGoal"
+        :showGuess="showGuess"
       />
     </div>
     <p v-if="distanceAway">{{ distanceAway }} km away!</p>
@@ -41,29 +45,52 @@ import { getRandomCoordsAndPictures } from "./Flickr/getRandomCoordsAndPictures"
 import Map from "@/components/Map.vue";
 import Image from "@/components/Image.vue";
 import BigImage from "@/components/BigImage.vue";
+import Hearts from "@/components/Hearts.vue";
 export default defineComponent({
   name: "Flickr",
   components: {
     Image,
     Map,
     BigImage,
+    Hearts,
   },
   setup() {
     let imageUrls = ref<{ url: string; originalItem: LatLngPhoto }[]>([]);
-    const currentTime = ref(0);
+    const roundNumber = ref(0);
+    const roundStarted = ref(false);
+    const lives = ref(0);
+    const currentTime = ref(60);
     const apiError = ref(false);
+    const showGoal = ref(false);
+    const showGuess = ref(false);
     const distanceAway = ref<null | string>(null);
     const imageErrorCallback = () => (apiError.value = true);
     const largeImageUrl = ref<null | string>(null);
     const answerCoords = ref<{ lat: number; lng: number }>({ lat: 0, lng: 0 });
+    const endRound = () => {
+      roundStarted.value = false;
+      showGoal.value = true;
+    };
     const handleMapClick = (lngLat: { lat: number; lng: number }) => {
-      if (answerCoords.value) {
-        distanceAway.value = getDistanceBetween(
-          lngLat.lat,
-          lngLat.lng,
-          answerCoords.value.lat,
-          answerCoords.value.lng
-        ).toFixed(0);
+      if (roundStarted.value) {
+        showGuess.value = true;
+        if (lives.value > 1) {
+          lives.value -= 1;
+        } else {
+          lives.value -= 1;
+          endRound();
+        }
+        if (answerCoords.value) {
+          distanceAway.value = getDistanceBetween(
+            lngLat.lat,
+            lngLat.lng,
+            answerCoords.value.lat,
+            answerCoords.value.lng
+          ).toFixed(0);
+          if (parseInt(distanceAway.value) < 10) {
+            console.log("You won!");
+          }
+        }
       }
     };
     const imageClick = function(item: LatLngPhoto) {
@@ -78,11 +105,23 @@ export default defineComponent({
     };
     const startGame = async () => {
       await getRandomCoordsAndPictures(answerCoords, imageUrls);
+      roundStarted.value = true;
+      showGoal.value = false;
+      showGuess.value = false;
+      lives.value = 5;
+      currentTime.value = 60;
+      roundNumber.value += 1;
       const interval = setInterval(() => {
-        if (currentTime.value < 10) {
-          currentTime.value += 1;
+        if (currentTime.value > 0) {
+          currentTime.value -= 1;
+          if (!roundStarted.value) {
+            clearInterval(interval);
+          }
         } else {
           clearInterval(interval);
+          if (roundStarted.value) {
+            endRound();
+          }
         }
       }, 1000);
     };
@@ -99,6 +138,11 @@ export default defineComponent({
       answerCoords,
       handleMapClick,
       distanceAway,
+      lives,
+      roundNumber,
+      roundStarted,
+      showGoal,
+      showGuess,
     };
   },
 });
@@ -126,8 +170,8 @@ export default defineComponent({
 }
 .images-container .Image {
   cursor: pointer;
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
   display: flex;
   justify-content: center;
@@ -139,6 +183,12 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+}
+@media only screen and (max-width: 500px) {
+  .images-container .Image {
+    width: 45vw;
+    height: 45vw;
   }
 }
 </style>

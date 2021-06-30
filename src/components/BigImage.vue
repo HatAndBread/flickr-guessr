@@ -28,7 +28,6 @@ import { defineComponent } from "vue";
 import magCursor from "@/assets/magnifying-glass.png";
 
 export default defineComponent({
-  name: "BigImage",
   props: {
     src: String,
   },

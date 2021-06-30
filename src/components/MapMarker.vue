@@ -27,7 +27,9 @@ export default defineComponent({
     onMounted(function() {
       console.log(props.coords);
       if (props.map && markerRef.value && props.coords) {
-        marker.value = new mapbox.Marker(markerRef.value, { offset: [0, -25] })
+        marker.value = new mapbox.Marker(markerRef.value, {
+          offset: [0, -25],
+        })
           .setLngLat(props.coords)
           .addTo(props.map);
       }
@@ -56,5 +58,10 @@ export default defineComponent({
 
 .guess {
   background-image: url("~@/assets/guess.svg");
+}
+
+.no-show {
+  display: none;
+  pointer-events: none;
 }
 </style>

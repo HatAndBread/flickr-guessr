@@ -5,13 +5,13 @@
     </div>
     <MapMarker
       :map="map"
-      className="marker goal"
+      :className="`marker goal${showGoal ? '' : ' no-show'}`"
       v-if="map"
       :coords="answerLatLng"
     />
     <MapMarker
       :map="map"
-      className="marker guess"
+      :className="`marker guess${showGuess ? '' : ' no-show'}`"
       v-if="map"
       :coords="guessCoords"
     />
@@ -46,6 +46,8 @@ export default defineComponent({
     zoom: Number,
     onMapClick: Function,
     answerCoords: Object,
+    showGoal: Boolean,
+    showGuess: Boolean,
   },
   watch: {
     answerCoords: function() {
@@ -85,7 +87,7 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   max-width: 600px;
-  height: 360px;
+  height: 400px;
   left: 50%;
   transform: translateX(-50%);
 }
