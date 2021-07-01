@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="startGame">Start</button>
+    <button @click="startGame" v-if="!gameIsFinished">Start</button>
     <p>{{ currentTime }}</p>
     <p>Try: {{ roundNumber }}</p>
     <Hearts :lives="lives" />
@@ -29,9 +29,15 @@
         :answerCoords="answerCoords"
         :showGoal="showGoal"
         :showGuess="showGuess"
+        :roundStarted="roundStarted"
+        :gameIsFinished="gameIsFinished"
       />
     </div>
     <p v-if="distanceAway">{{ distanceAway }} km away!</p>
+    <div v-if="gameIsFinished">
+      The game is finished
+      <button @click="playAgain">Play Again</button>
+    </div>
   </div>
 </template>
 
@@ -63,11 +69,15 @@ export default defineComponent({
     const apiError = ref(false);
     const showGoal = ref(false);
     const showGuess = ref(false);
+    const gameIsFinished = ref(false);
     const distanceAway = ref<null | string>(null);
     const imageErrorCallback = () => (apiError.value = true);
     const largeImageUrl = ref<null | string>(null);
     const answerCoords = ref<{ lat: number; lng: number }>({ lat: 0, lng: 0 });
     const endRound = () => {
+      if (roundNumber.value === 5) {
+        gameIsFinished.value = true;
+      }
       roundStarted.value = false;
       showGoal.value = true;
     };
@@ -105,12 +115,13 @@ export default defineComponent({
     };
     const startGame = async () => {
       await getRandomCoordsAndPictures(answerCoords, imageUrls);
+      roundNumber.value += 1;
       roundStarted.value = true;
       showGoal.value = false;
       showGuess.value = false;
+      gameIsFinished.value = false;
       lives.value = 5;
       currentTime.value = 60;
-      roundNumber.value += 1;
       const interval = setInterval(() => {
         if (currentTime.value > 0) {
           currentTime.value -= 1;
@@ -124,6 +135,10 @@ export default defineComponent({
           }
         }
       }, 1000);
+    };
+    const playAgain = () => {
+      roundNumber.value = 0;
+      startGame();
     };
     return {
       currentTime,
@@ -143,6 +158,8 @@ export default defineComponent({
       roundStarted,
       showGoal,
       showGuess,
+      gameIsFinished,
+      playAgain,
     };
   },
 });
