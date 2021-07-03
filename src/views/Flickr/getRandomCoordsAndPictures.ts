@@ -4,16 +4,22 @@ import { getRandomUrls } from "./getRandomUrls";
 
 export const getRandomCoordsAndPictures = async (
   latLngAnswer: any,
-  imageUrls: any
+  imageUrls: any,
+  answerCountryCode: any
 ) => {
-  let coords = getRandomCoordsWithinRadius(4);
+  let placeData = getRandomCoordsWithinRadius(5);
+  let coords = { lat: placeData.lat, lng: placeData.lng };
+  let country = placeData.country;
   let pictures = await getPictures(coords);
   while (pictures.photos.photo.length < 4) {
     console.log("RETRIEVING AGAIN");
-    coords = getRandomCoordsWithinRadius(2);
+    placeData = getRandomCoordsWithinRadius(5);
+    coords = { lat: placeData.lat, lng: placeData.lng };
+    country = placeData.country;
     pictures = await getPictures(coords);
   }
   latLngAnswer.value = coords;
+  answerCountryCode.value = country.toLowerCase();
   imageUrls.value = getRandomUrls(pictures);
   return { coords, pictures };
 };
@@ -39,5 +45,6 @@ export const getRandomCoordsWithinRadius = (radius: number) => {
         4
       )
     ),
+    country: city.c,
   };
 };

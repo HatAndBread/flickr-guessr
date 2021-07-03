@@ -1,5 +1,14 @@
 <template>
   <div class="outer-container">
+    <div
+      :class="
+        `distance-update${
+          showDistanceUpdate && distanceAway ? ' fade-in' : ' fade-out'
+        }`
+      "
+    >
+      {{ distanceAway && parseInt(distanceAway).toLocaleString() }} km away!
+    </div>
     <div class="map-container">
       <div id="map"></div>
     </div>
@@ -30,11 +39,13 @@ export default defineComponent({
     map: null | mapbox.Map;
     guessCoords: [number, number];
     answerLatLng: [number, number];
+    showDistanceUpdate: boolean;
   } {
     return {
       map: null,
       guessCoords: [40, 80],
       answerLatLng: [0, 0],
+      showDistanceUpdate: false,
     };
   },
   components: {
@@ -48,11 +59,25 @@ export default defineComponent({
     showGuess: Boolean,
     roundStarted: Boolean,
     gameIsFinished: Boolean,
+    distanceAway: String || null,
   },
   watch: {
+    distanceAway: function() {
+      this.showDistanceUpdate = true;
+      setTimeout(() => {
+        this.showDistanceUpdate = false;
+      }, 1000);
+    },
     answerCoords: function() {
       if (this.answerCoords?.lng && this.answerCoords?.lat) {
         this.answerLatLng = [this.answerCoords.lng, this.answerCoords.lat];
+      }
+    },
+    roundStarted: function() {
+      if (this.roundStarted) {
+        if (this.map) {
+          this.map.flyTo({ center: [0, 0], zoom: 0 });
+        }
       }
     },
     showGoal: function() {
@@ -89,47 +114,12 @@ export default defineComponent({
         }
       }
     },
-    // gameIsFinished: function() {
-    //   if (this.gameIsFinished) {
-    //     if (this.map) {
-    //       this.map.addSource("a", {
-    //         type: "geojson",
-    //         data: {
-    //           type: "Feature",
-    //           properties: {},
-    //           geometry: {
-    //             type: "LineString",
-    //             coordinates: [this.answerLatLng, this.guessCoords],
-    //           },
-    //         },
-    //       });
-    //       this.map.addLayer({
-    //         id: "a",
-    //         type: "line",
-    //         source: "a",
-    //         layout: {
-    //           "line-join": "round",
-    //           "line-cap": "round",
-    //         },
-    //         paint: {
-    //           "line-color": "#888",
-    //           "line-width": 8,
-    //         },
-    //       });
-    //     }
-    //   } else {
-    //     if (this.map) {
-    //       this.map.removeLayer("a");
-    //       this.map.removeSource("a");
-    //     }
-    //   }
-    // },
   },
   mounted: function() {
     this.map = new mapbox.Map({
       container: "map",
       style: "mapbox://styles/mapbox/streets-v11",
-      center: [140.0, 38.2],
+      center: [0, 0],
       zoom: this.zoom,
       maxZoom: 18,
     });
@@ -149,6 +139,7 @@ export default defineComponent({
 .outer-container {
   margin: 16px;
   width: 600px;
+  position: relative;
 }
 .map-container {
   display: flex;
@@ -167,6 +158,32 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   border-radius: 8px;
+}
+.distance-update {
+  font-size: 32px;
+  position: absolute;
+  z-index: 90;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  white-space: nowrap;
+  transition: 3s;
+  transition-timing-function: ease-out;
+  font-family: monospace;
+  color: red;
+  font-weight: 900;
+}
+.fade-in {
+  opacity: 1;
+}
+.fade-out {
+  opacity: 0;
 }
 @media only screen and (max-width: 1000px) {
   .outer-container {
