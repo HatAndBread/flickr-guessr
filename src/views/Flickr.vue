@@ -41,6 +41,7 @@
         :roundStarted="roundStarted"
         :gameIsFinished="gameIsFinished"
         :distanceAway="distanceAway"
+        :countryBonus="countryBonus"
       />
     </div>
   </div>
@@ -126,7 +127,6 @@ export default defineComponent({
           countryBonus.value === 0
         ) {
           countryBonus.value = (lives.value + 1) * 1000;
-          console.log("Correct country!");
         }
       }
     };
@@ -143,6 +143,7 @@ export default defineComponent({
     const startGame = async () => {
       roundStarted.value = true;
       distanceAway.value = null;
+      points.value += countryBonus.value;
       countryBonus.value = 0;
       await getRandomCoordsAndPictures(
         answerCoords,
@@ -170,6 +171,7 @@ export default defineComponent({
       }, 100);
     };
     const playAgain = () => {
+      points.value = 0;
       roundNumber.value = 0;
       startGame();
     };

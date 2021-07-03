@@ -2,12 +2,22 @@
   <div class="outer-container">
     <div
       :class="
-        `distance-update${
+        `updater${
           showDistanceUpdate && distanceAway ? ' fade-in' : ' fade-out'
         }`
       "
     >
       {{ distanceAway && parseInt(distanceAway).toLocaleString() }} km away!
+    </div>
+    <div
+      :class="
+        `updater country${
+          showCountryBonus && countryBonus ? ' fade-in' : ' fade-out'
+        }`
+      "
+    >
+      Correct country! +{{ countryBonus && countryBonus.toLocaleString() }}
+      points!
     </div>
     <div class="map-container">
       <div id="map"></div>
@@ -37,15 +47,17 @@ export default defineComponent({
   name: "Map",
   data(): {
     map: null | mapbox.Map;
-    guessCoords: [number, number];
+    guessCoords: [number, number] | null;
     answerLatLng: [number, number];
     showDistanceUpdate: boolean;
+    showCountryBonus: boolean;
   } {
     return {
       map: null,
       guessCoords: [40, 80],
       answerLatLng: [0, 0],
       showDistanceUpdate: false,
+      showCountryBonus: false,
     };
   },
   components: {
@@ -60,6 +72,7 @@ export default defineComponent({
     roundStarted: Boolean,
     gameIsFinished: Boolean,
     distanceAway: String || null,
+    countryBonus: Number,
   },
   watch: {
     distanceAway: function() {
@@ -67,6 +80,14 @@ export default defineComponent({
       setTimeout(() => {
         this.showDistanceUpdate = false;
       }, 1000);
+    },
+    countryBonus: function() {
+      if (this.countryBonus) {
+        this.showCountryBonus = true;
+        setTimeout(() => {
+          this.showCountryBonus = false;
+        }, 3000);
+      }
     },
     answerCoords: function() {
       if (this.answerCoords?.lng && this.answerCoords?.lat) {
@@ -81,37 +102,36 @@ export default defineComponent({
       }
     },
     showGoal: function() {
-      if (this.map) {
-        if (this.showGoal) {
-          this.map.flyTo({ center: this.answerLatLng });
-          this.map.addSource("a", {
-            type: "geojson",
-            data: {
-              type: "Feature",
-              properties: {},
-              geometry: {
-                type: "LineString",
-                coordinates: [this.answerLatLng, this.guessCoords],
-              },
+      if (this.showGoal && this.guessCoords && this.map) {
+        this.map.flyTo({ center: this.answerLatLng });
+        this.map.addSource("a", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates: [this.answerLatLng, this.guessCoords],
             },
-          });
-          this.map.addLayer({
-            id: "a",
-            type: "line",
-            source: "a",
-            layout: {
-              "line-join": "round",
-              "line-cap": "round",
-            },
-            paint: {
-              "line-color": "#888",
-              "line-width": 8,
-            },
-          });
-        } else {
-          this.map.removeLayer("a");
-          this.map.removeSource("a");
-        }
+          },
+        });
+        this.map.addLayer({
+          id: "a",
+          type: "line",
+          source: "a",
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
+          paint: {
+            "line-color": "#888",
+            "line-width": 8,
+          },
+        });
+      } else if (!this.showGoal && this.map && this.guessCoords) {
+        this.guessCoords = null;
+        this.map.removeLayer("a");
+        this.map.removeSource("a");
       }
     },
   },
@@ -159,7 +179,7 @@ export default defineComponent({
   height: 100%;
   border-radius: 8px;
 }
-.distance-update {
+.updater {
   font-size: 32px;
   position: absolute;
   z-index: 90;
@@ -179,6 +199,11 @@ export default defineComponent({
   color: red;
   font-weight: 900;
 }
+.country {
+  align-items: flex-start;
+  font-size: 24px;
+}
+
 .fade-in {
   opacity: 1;
 }
