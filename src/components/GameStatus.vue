@@ -13,9 +13,20 @@
         <div class="label">Time</div>
         {{ currentTime && currentTime > 0 ? currentTime.toFixed(1) : "--" }}
       </div>
-      <div class="distance-away b r">
+      <div class="distance-away b br">
         <div class="label">Distance</div>
         {{ distanceAway && parseInt(distanceAway).toLocaleString() }} km
+      </div>
+      <div class="total-points b r">
+        <div class="label">Points</div>
+        <span v-if="points">
+          {{
+            roundStarted && typeof countryBonus === "number"
+              ? (points + countryBonus).toLocaleString()
+              : points.toLocaleString()
+          }}
+        </span>
+        <span v-else>0</span>
       </div>
     </div>
   </div>
@@ -34,6 +45,9 @@ export default defineComponent({
     roundNumber: Number,
     currentTime: Number,
     distanceAway: String,
+    points: Number,
+    countryBonus: Number,
+    roundStarted: Boolean,
   },
 });
 </script>
@@ -54,6 +68,7 @@ export default defineComponent({
 }
 .b {
   border-style: solid;
+  border-color: gray;
   border-width: 1px;
   padding: 8px;
   color: black;

@@ -1,19 +1,26 @@
 <template>
-  <div>
-    <button @click="startGame" v-if="!gameIsFinished && !roundStarted">
+  <div class="FlickrGame">
+    <button @click="startGame" v-if="!gameIsStarted">
       Start
     </button>
     <button @click="playAgain" v-if="gameIsFinished">Play Again</button>
-    <div class="points-display">
-      {{ (points + countryBonus).toLocaleString() }} points
-    </div>
     <GameStatus
       :lives="lives"
       :roundNumber="roundNumber"
       :currentTime="currentTime"
       :distanceAway="distanceAway"
+      :roundStarted="roundStarted"
+      :countryBonus="countryBonus"
+      :points="points"
     />
     <div class="image-map-container">
+      <ResultSummary
+        v-if="gameIsFinished"
+        :points="points"
+        :countryBonus="countryBonus"
+        :allRoundsResults="allRoundsResults"
+        :roundStarted="roundStarted"
+      />
       <div class="images-container" v-if="imageUrls.length > 0">
         <div v-if="apiError">There has been an error.</div>
         <Image
@@ -44,6 +51,13 @@
         :countryBonus="countryBonus"
       />
     </div>
+    <after-each-round-modal
+      :showAfterRoundModal="showAfterRoundModal"
+      :pointsThisRound="allRoundsResults[roundNumber - 1]"
+      :distanceAway="distanceAway"
+      :closeAfterRoundModal="closeAfterRoundModal"
+      :startGame="startGame"
+    />
   </div>
 </template>
 
@@ -59,6 +73,8 @@ import Map from "@/components/Map.vue";
 import Image from "@/components/Image.vue";
 import BigImage from "@/components/BigImage.vue";
 import GameStatus from "@/components/GameStatus.vue";
+import ResultSummary from "@/components/ResultSummary.vue";
+import AfterEachRoundModal from "@/components/AfterEachRoundModal.vue";
 export default defineComponent({
   name: "Flickr",
   components: {
@@ -66,6 +82,8 @@ export default defineComponent({
     Map,
     BigImage,
     GameStatus,
+    ResultSummary,
+    AfterEachRoundModal,
   },
   setup() {
     let imageUrls = ref<{ url: string; originalItem: LatLngPhoto }[]>([]);
@@ -76,8 +94,12 @@ export default defineComponent({
     const apiError = ref(false);
     const showGoal = ref(false);
     const showGuess = ref(false);
+    const gameIsStarted = ref(false);
     const gameIsFinished = ref(false);
+    const showAfterRoundModal = ref(false);
+    const closeAfterRoundModal = () => (showAfterRoundModal.value = false);
     const points = ref(0);
+    const allRoundsResults = ref<number[]>([0, 0, 0, 0, 0]);
     const countryBonus = ref(0);
     const distanceAway = ref<null | string>(null);
     const imageErrorCallback = () => (apiError.value = true);
@@ -87,6 +109,7 @@ export default defineComponent({
     const endRound = () => {
       if (roundNumber.value === 5) {
         gameIsFinished.value = true;
+        imageUrls.value = [];
       }
       roundStarted.value = false;
       showGoal.value = true;
@@ -96,13 +119,16 @@ export default defineComponent({
         const distance = parseInt(distanceAway.value);
         const p = (40000 - distance * 2) * (lives.value + 1);
         const divisor = distance * 0.01 < 1 ? 1 : distance * 0.01;
-        points.value +=
+        const totalPoints =
           (win ? p : Math.floor(p / divisor / 2)) + countryBonus.value;
-        console.log(
-          `Points this round: ${
-            win ? p : Math.floor(p / divisor / 2)
-          } + country bonus: ${countryBonus.value}`
-        );
+        allRoundsResults.value[roundNumber.value - 1] = totalPoints;
+        points.value += totalPoints;
+      }
+      countryBonus.value = 0;
+      if (roundNumber.value < 5) {
+        setTimeout(() => {
+          showAfterRoundModal.value = true;
+        }, 2000);
       }
     };
     const handleMapClick = async (lngLat: { lat: number; lng: number }) => {
@@ -152,6 +178,7 @@ export default defineComponent({
     const startGame = async () => {
       roundStarted.value = true;
       distanceAway.value = null;
+      gameIsStarted.value = true;
       points.value += countryBonus.value;
       countryBonus.value = 0;
       await getRandomCoordsAndPictures(
@@ -175,6 +202,7 @@ export default defineComponent({
           clearInterval(interval);
           if (roundStarted.value) {
             endRound();
+            addPoints();
           }
         }
       }, 100);
@@ -182,6 +210,7 @@ export default defineComponent({
     const playAgain = () => {
       points.value = 0;
       roundNumber.value = 0;
+      allRoundsResults.value = [0, 0, 0, 0, 0];
       startGame();
     };
     return {
@@ -202,8 +231,12 @@ export default defineComponent({
       roundStarted,
       showGoal,
       showGuess,
+      showAfterRoundModal,
+      closeAfterRoundModal,
+      gameIsStarted,
       points,
       countryBonus,
+      allRoundsResults,
       gameIsFinished,
       playAgain,
     };
@@ -212,6 +245,9 @@ export default defineComponent({
 </script>
 
 <style>
+.FlickrGame {
+  font-family: "Amatic SC", monospace;
+}
 .image-map-container {
   display: flex;
   justify-content: center;
@@ -241,12 +277,7 @@ export default defineComponent({
   align-items: center;
   border-radius: 8px;
 }
-.points-display {
-  font-family: "Amatic SC", monospace;
-  font-size: 24px;
-  font-weight: 900;
-  margin-top: 8px;
-}
+
 @media only screen and (max-width: 1000px) {
   .image-map-container {
     flex-direction: column;

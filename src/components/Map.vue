@@ -81,6 +81,11 @@ export default defineComponent({
         this.showDistanceUpdate = false;
       }, 1000);
     },
+    gameIsFinished: function() {
+      if (this.map && this.gameIsFinished) {
+        this.map.flyTo({ center: this.answerLatLng, zoom: 10 });
+      }
+    },
     countryBonus: function() {
       if (this.countryBonus) {
         this.showCountryBonus = true;

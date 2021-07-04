@@ -24,6 +24,7 @@ body {
   color: white;
   cursor: pointer;
   transition: 0.3s;
+  font-family: monospace;
 }
 .modal img {
   box-shadow: rgba(30, 30, 30, 0.8) 0px 0px 4px 4px;
@@ -33,7 +34,7 @@ body {
 }
 
 .modal-closer:hover {
-  color: lightcoral;
+  color: #a9aad4;
 }
 
 button {
