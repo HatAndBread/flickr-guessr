@@ -79,7 +79,7 @@ export default defineComponent({
       this.showDistanceUpdate = true;
       setTimeout(() => {
         this.showDistanceUpdate = false;
-      }, 1000);
+      }, 3000);
     },
     gameIsFinished: function() {
       if (this.map && this.gameIsFinished) {

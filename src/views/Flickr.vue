@@ -3,6 +3,7 @@
     <button @click="startGame" v-if="!gameIsStarted">
       Start
     </button>
+    <button @click="startGame" v-if="showNextRoundButton">Next Round</button>
     <button @click="playAgain" v-if="gameIsFinished">Play Again</button>
     <GameStatus
       :lives="lives"
@@ -14,13 +15,6 @@
       :points="points"
     />
     <div class="image-map-container">
-      <ResultSummary
-        v-if="gameIsFinished"
-        :points="points"
-        :countryBonus="countryBonus"
-        :allRoundsResults="allRoundsResults"
-        :roundStarted="roundStarted"
-      />
       <div class="images-container" v-if="imageUrls.length > 0">
         <div v-if="apiError">There has been an error.</div>
         <Image
@@ -57,6 +51,15 @@
       :distanceAway="distanceAway"
       :closeAfterRoundModal="closeAfterRoundModal"
       :startGame="startGame"
+      :activateNextRoundButton="activateNextRoundButton"
+      :winMessage="winMessage"
+    />
+    <after-each-game-modal
+      :showAfterGameModal="showAfterGameModal"
+      :closeModal="closeAfterGameModal"
+      :points="points"
+      :allRoundsResults="allRoundsResults"
+      :winMessage="winMessage"
     />
   </div>
 </template>
@@ -73,8 +76,8 @@ import Map from "@/components/Map.vue";
 import Image from "@/components/Image.vue";
 import BigImage from "@/components/BigImage.vue";
 import GameStatus from "@/components/GameStatus.vue";
-import ResultSummary from "@/components/ResultSummary.vue";
 import AfterEachRoundModal from "@/components/AfterEachRoundModal.vue";
+import AfterEachGameModal from "@/components/AfterEachGameModal.vue";
 export default defineComponent({
   name: "Flickr",
   components: {
@@ -82,8 +85,8 @@ export default defineComponent({
     Map,
     BigImage,
     GameStatus,
-    ResultSummary,
     AfterEachRoundModal,
+    AfterEachGameModal,
   },
   setup() {
     let imageUrls = ref<{ url: string; originalItem: LatLngPhoto }[]>([]);
@@ -94,10 +97,15 @@ export default defineComponent({
     const apiError = ref(false);
     const showGoal = ref(false);
     const showGuess = ref(false);
+    const winMessage = ref<null | string>(null);
+    const showNextRoundButton = ref(false);
+    const activateNextRoundButton = () => (showNextRoundButton.value = true);
     const gameIsStarted = ref(false);
     const gameIsFinished = ref(false);
     const showAfterRoundModal = ref(false);
     const closeAfterRoundModal = () => (showAfterRoundModal.value = false);
+    const showAfterGameModal = ref(false);
+    const closeAfterGameModal = () => (showAfterGameModal.value = false);
     const points = ref(0);
     const allRoundsResults = ref<number[]>([0, 0, 0, 0, 0]);
     const countryBonus = ref(0);
@@ -108,6 +116,9 @@ export default defineComponent({
     const answerCountryCode = ref("");
     const endRound = () => {
       if (roundNumber.value === 5) {
+        setTimeout(() => {
+          showAfterGameModal.value = true;
+        }, 2000);
         gameIsFinished.value = true;
         imageUrls.value = [];
       }
@@ -128,7 +139,7 @@ export default defineComponent({
       if (roundNumber.value < 5) {
         setTimeout(() => {
           showAfterRoundModal.value = true;
-        }, 2000);
+        }, 2500);
       }
     };
     const handleMapClick = async (lngLat: { lat: number; lng: number }) => {
@@ -152,7 +163,7 @@ export default defineComponent({
             answerCoords.value.lng
           ).toFixed(0);
           if (parseInt(distanceAway.value) <= 10) {
-            console.log("You won!");
+            winMessage.value = `Congratulations!🎉🥳✨ \n You guessed within ${distanceAway.value} km of the original location!`;
             endRound();
             addPoints(true);
           } else if (lives.value > 1) {
@@ -179,6 +190,8 @@ export default defineComponent({
       roundStarted.value = true;
       distanceAway.value = null;
       gameIsStarted.value = true;
+      winMessage.value = null;
+      showNextRoundButton.value = false;
       points.value += countryBonus.value;
       countryBonus.value = 0;
       await getRandomCoordsAndPictures(
@@ -232,6 +245,10 @@ export default defineComponent({
       showGoal,
       showGuess,
       showAfterRoundModal,
+      showNextRoundButton,
+      showAfterGameModal,
+      closeAfterGameModal,
+      activateNextRoundButton,
       closeAfterRoundModal,
       gameIsStarted,
       points,
@@ -239,6 +256,7 @@ export default defineComponent({
       allRoundsResults,
       gameIsFinished,
       playAgain,
+      winMessage,
     };
   },
 });

@@ -1,6 +1,12 @@
 <template>
-  <div class="modal" v-if="showAfterRoundModal">
+  <div :class="`modal ${showAfterRoundModal ? 'fade-in' : 'fade-out'}`">
+    <div class="modal-closer" @click="closeModalWithoutGoingToNextRound">
+      X
+    </div>
     <div class="modal-box">
+      <p class="m" v-if="winMessage">
+        {{ winMessage }}
+      </p>
       <div class="m">
         Points this round:
         {{ pointsThisRound && pointsThisRound.toLocaleString() }}
@@ -18,17 +24,24 @@ import { defineComponent } from "vue";
 export default defineComponent({
   props: {
     showAfterRoundModal: Boolean,
+    winMessage: String || null,
     pointsThisRound: Number,
     distanceAway: String,
     closeAfterRoundModal: Function,
+    activateNextRoundButton: Function,
     startGame: Function,
   },
   methods: {
     nextRound: function() {
-      console.log("fuck");
       if (this.startGame && this.closeAfterRoundModal) {
         this.startGame();
         this.closeAfterRoundModal();
+      }
+    },
+    closeModalWithoutGoingToNextRound: function() {
+      if (this.closeAfterRoundModal && this.activateNextRoundButton) {
+        this.closeAfterRoundModal();
+        this.activateNextRoundButton();
       }
     },
   },
@@ -51,5 +64,16 @@ export default defineComponent({
 }
 .m {
   margin: 8px;
+}
+.modal {
+  transition: 0.3s;
+}
+.fade-in {
+  opacity: 1;
+  pointer-events: all;
+}
+.fade-out {
+  opacity: 0;
+  pointer-events: none;
 }
 </style>

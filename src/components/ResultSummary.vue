@@ -9,11 +9,7 @@
     <div>
       Total:
       <span v-if="points">
-        {{
-          roundStarted && typeof countryBonus === "number"
-            ? (points + countryBonus).toLocaleString()
-            : points.toLocaleString()
-        }}
+        {{ points.toLocaleString() }}
       </span>
       <span v-else>0</span>
       points
@@ -27,9 +23,7 @@ import { defineComponent, PropType } from "vue";
 export default defineComponent({
   props: {
     points: Number,
-    countryBonus: Number,
     allRoundsResults: Array as PropType<number[]>,
-    roundStarted: Boolean,
   },
 });
 </script>

@@ -17,9 +17,9 @@ body {
   z-index: 10000;
 }
 .modal-closer {
-  position: absolute;
-  top: 0;
-  left: 90%;
+  position: fixed;
+  top: 10px;
+  left: calc(100vw - 50px);
   font-size: 50px;
   color: white;
   cursor: pointer;
