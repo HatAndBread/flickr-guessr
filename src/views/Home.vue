@@ -5,7 +5,6 @@
       :userName="store.state.userName"
     />
     <Image :src="earth" alt="foo-foo" width="50" />
-    <Map :zoom="8" />
   </div>
 </template>
 
@@ -15,14 +14,12 @@ import Image from "@/components/Image.vue";
 import { defineComponent } from "vue";
 import { store, Store } from "@/store";
 import earth from "../assets/planet-earth.svg";
-import Map from "@/components/Map.vue";
 
 export default defineComponent({
   name: "Home",
   components: {
     Landing,
     Image,
-    Map,
   },
   data(): { store: Store; earth: string } {
     return { store, earth };

@@ -33,7 +33,7 @@
         <BigImage :src="largeImageUrl" />
       </div>
       <Map
-        :zoom="0"
+        :zoom="0.1"
         :onMapClick="handleMapClick"
         :answerCoords="answerCoords"
         :showGoal="showGoal"
@@ -91,23 +91,32 @@ export default defineComponent({
       roundStarted.value = false;
       showGoal.value = true;
     };
-    const addPoints = () => {
+    const addPoints = (win?: boolean) => {
       if (distanceAway.value) {
+        const distance = parseInt(distanceAway.value);
+        const p = (40000 - distance * 2) * (lives.value + 1);
+        const divisor = distance * 0.01 < 1 ? 1 : distance * 0.01;
         points.value +=
-          (12800 - parseInt(distanceAway.value)) * (lives.value + 1);
+          (win ? p : Math.floor(p / divisor / 2)) + countryBonus.value;
+        console.log(
+          `Points this round: ${
+            win ? p : Math.floor(p / divisor / 2)
+          } + country bonus: ${countryBonus.value}`
+        );
       }
     };
     const handleMapClick = async (lngLat: { lat: number; lng: number }) => {
       if (roundStarted.value) {
         showGuess.value = true;
-        if (lives.value > 1) {
-          lives.value -= 1;
-        } else {
-          lives.value -= 1;
-          endRound();
-        }
-        if (!lives.value) {
-          addPoints();
+        console.log(
+          `answer country: ${answerCountryCode.value} \n answer coords: ${answerCoords.value.lat}, ${answerCoords.value.lng}`
+        );
+        const countryCode = await getCountryCode(lngLat);
+        if (
+          countryCode === answerCountryCode.value &&
+          countryBonus.value === 0
+        ) {
+          countryBonus.value = lives.value * 1000;
         }
         if (answerCoords.value) {
           distanceAway.value = getDistanceBetween(
@@ -116,17 +125,17 @@ export default defineComponent({
             answerCoords.value.lat,
             answerCoords.value.lng
           ).toFixed(0);
-          if (parseInt(distanceAway.value) < 10) {
+          if (parseInt(distanceAway.value) <= 10) {
             console.log("You won!");
+            endRound();
+            addPoints(true);
+          } else if (lives.value > 1) {
+            lives.value -= 1;
+          } else {
+            lives.value -= 1;
+            endRound();
             addPoints();
           }
-        }
-        const countryCode = await getCountryCode(lngLat);
-        if (
-          countryCode === answerCountryCode.value &&
-          countryBonus.value === 0
-        ) {
-          countryBonus.value = (lives.value + 1) * 1000;
         }
       }
     };
