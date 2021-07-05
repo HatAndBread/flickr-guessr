@@ -78,6 +78,13 @@ export default defineComponent({
     gameIsStarted: Boolean,
   },
   watch: {
+    showMap: function() {
+      if (this.showMap) {
+        setTimeout(() => {
+          this.map?.resize();
+        }, 80);
+      }
+    },
     distanceAway: function() {
       this.showDistanceUpdate = true;
       setTimeout(() => {
