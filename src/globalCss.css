@@ -26,7 +26,7 @@ body {
   top: 10px;
   left: calc(100vw - 50px);
   font-size: 50px;
-  color: white;
+  color: snow;
   cursor: pointer;
   transition: 0.3s;
   font-family: monospace;
