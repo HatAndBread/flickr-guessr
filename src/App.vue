@@ -19,9 +19,11 @@ export default defineComponent({
 
 <style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Amatic SC", monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  width: 100vw;
+  font-size: x-large;
 }
 </style>

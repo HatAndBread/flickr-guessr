@@ -3,6 +3,13 @@
     <button @click="startGame" v-if="!gameIsStarted">
       Start
     </button>
+    <button
+      class="map-image-toggle-btn"
+      @click="toggleMap"
+      v-if="gameIsStarted && !showNextRoundButton && !gameIsFinished"
+    >
+      Show {{ showMap ? "Images" : "Map" }}
+    </button>
     <button @click="startGame" v-if="showNextRoundButton">Next Round</button>
     <button @click="playAgain" v-if="gameIsFinished">Play Again</button>
     <GameStatus
@@ -15,7 +22,20 @@
       :points="points"
     />
     <div class="image-map-container">
-      <div class="images-container" v-if="imageUrls.length > 0">
+      <Map
+        :zoom="0.1"
+        :onMapClick="handleMapClick"
+        :answerCoords="answerCoords"
+        :showGoal="showGoal"
+        :showGuess="showGuess"
+        :roundStarted="roundStarted"
+        :gameIsFinished="gameIsFinished"
+        :distanceAway="distanceAway"
+        :countryBonus="countryBonus"
+        :showMap="showMap"
+        :gameIsStarted="gameIsStarted"
+      />
+      <div class="images-container" v-if="imageUrls.length > 0 && !showMap">
         <div v-if="apiError">There has been an error.</div>
         <Image
           v-for="(url, index) in imageUrls"
@@ -33,17 +53,6 @@
         <div class="modal-closer" @click="closeModal">x</div>
         <BigImage :src="largeImageUrl" />
       </div>
-      <Map
-        :zoom="0.1"
-        :onMapClick="handleMapClick"
-        :answerCoords="answerCoords"
-        :showGoal="showGoal"
-        :showGuess="showGuess"
-        :roundStarted="roundStarted"
-        :gameIsFinished="gameIsFinished"
-        :distanceAway="distanceAway"
-        :countryBonus="countryBonus"
-      />
     </div>
     <after-each-round-modal
       :showAfterRoundModal="showAfterRoundModal"
@@ -97,6 +106,7 @@ export default defineComponent({
     const apiError = ref(false);
     const showGoal = ref(false);
     const showGuess = ref(false);
+    const showMap = ref(false);
     const winMessage = ref<null | string>(null);
     const showNextRoundButton = ref(false);
     const activateNextRoundButton = () => (showNextRoundButton.value = true);
@@ -114,6 +124,9 @@ export default defineComponent({
     const largeImageUrl = ref<null | string>(null);
     const answerCoords = ref<{ lat: number; lng: number }>({ lat: 0, lng: 0 });
     const answerCountryCode = ref("");
+    const toggleMap = () => {
+      showMap.value ? (showMap.value = false) : (showMap.value = true);
+    };
     const endRound = () => {
       if (roundNumber.value === 5) {
         setTimeout(() => {
@@ -192,6 +205,7 @@ export default defineComponent({
       gameIsStarted.value = true;
       winMessage.value = null;
       showNextRoundButton.value = false;
+      showMap.value = false;
       points.value += countryBonus.value;
       countryBonus.value = 0;
       await getRandomCoordsAndPictures(
@@ -247,6 +261,8 @@ export default defineComponent({
       showAfterRoundModal,
       showNextRoundButton,
       showAfterGameModal,
+      showMap,
+      toggleMap,
       closeAfterGameModal,
       activateNextRoundButton,
       closeAfterRoundModal,
@@ -269,7 +285,7 @@ export default defineComponent({
 .image-map-container {
   display: flex;
   justify-content: center;
-  width: 100vw;
+  width: 100%;
 }
 .images-container {
   display: grid;

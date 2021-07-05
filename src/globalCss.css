@@ -1,7 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Orbitron&display=swap");
-
+html {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
 body {
   margin: 0 !important;
+  width: 100vw;
 }
 .modal {
   background-color: rgba(50, 50, 50, 0.7);
@@ -9,7 +13,8 @@ body {
   top: 0px;
   left: 0px;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -56,4 +61,8 @@ button:hover {
   color: #551a8b;
   background-color: #e6e7f9;
   box-shadow: gray 1px 1px 2px 2px;
+}
+
+a:any-link {
+  color: #551a8b;
 }

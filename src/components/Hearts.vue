@@ -1,6 +1,7 @@
 <template>
   <div class="Hearts" v-if="typeof lives === 'number'">
     <img :src="heartSrc" alt="♥️" v-for="life in lives" :key="life" />
+    <img :src="noFillSrc" alt="🖤" v-for="unLife in 5 - lives" :key="unLife" />
     <div class="" v-if="!lives">-----</div>
   </div>
 </template>
@@ -8,6 +9,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import heartSrc from "@/assets/heart.svg";
+import noFillSrc from "@/assets/heart-no-fill.svg";
 
 export default defineComponent({
   props: {
@@ -16,6 +18,7 @@ export default defineComponent({
   data: function() {
     return {
       heartSrc,
+      noFillSrc,
     };
   },
 });

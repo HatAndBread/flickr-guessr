@@ -52,8 +52,8 @@ export default defineComponent({
         const big = this.$refs.bigImage as HTMLImageElement;
         const mag = this.$refs.magnifiedDiv as HTMLDivElement;
         big.style.cursor = "none";
-        mag.style.backgroundPositionX = `${(e.offsetX * -2600) / big.width}px`;
-        mag.style.backgroundPositionY = `${(e.offsetY * -2600) / big.width}px`;
+        mag.style.backgroundPositionX = `${(e.offsetX * -2470) / big.width}px`;
+        mag.style.backgroundPositionY = `${(e.offsetY * -2470) / big.width}px`;
         mag.style.left = `${e.x - 130}px`;
         mag.style.top = `${e.y - 130}px`;
       }

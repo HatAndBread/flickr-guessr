@@ -1,7 +1,6 @@
 <template>
   <div class="Nav">
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
     <router-link to="/flickr-guessr">Flickr Guessr</router-link>
   </div>
 </template>
@@ -16,7 +15,7 @@ export default defineComponent({
 
 <style scoped>
 .Nav {
-  height: 80px;
+  height: 62px;
   width: 100%;
   background-color: lavender;
 }

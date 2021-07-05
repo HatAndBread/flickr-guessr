@@ -2,12 +2,12 @@
   <div class="game-status-container">
     <div class="GameStatus">
       <div class="lives-container b l br">
-        <div class="label">Lives</div>
+        <div class="label">Chances remaining</div>
         <Hearts :lives="lives" />
       </div>
       <div class="round-number b br">
         <div class="label">Round</div>
-        {{ roundNumber ? roundNumber : "--" }}
+        {{ roundNumber }}/5
       </div>
       <div class="time-display-container b br">
         <div class="label">Time</div>
@@ -15,7 +15,7 @@
       </div>
       <div class="distance-away b br">
         <div class="label">Distance</div>
-        {{ distanceAway && parseInt(distanceAway).toLocaleString() }} km
+        {{ distanceAway ? parseInt(distanceAway).toLocaleString() : "-- " }} km
       </div>
       <div class="total-points b r">
         <div class="label">Points</div>

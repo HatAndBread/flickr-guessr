@@ -1,5 +1,5 @@
 <template>
-  <div class="outer-container">
+  <div :class="`outer-container ${showMap || !gameIsStarted ? '' : 'hide'}`">
     <div
       :class="
         `updater${
@@ -7,7 +7,8 @@
         }`
       "
     >
-      {{ distanceAway && parseInt(distanceAway).toLocaleString() }} km away!
+      {{ distanceAway && parseInt(distanceAway).toLocaleString() }}
+      {{ distanceAway && "km away" }}!
     </div>
     <div
       :class="
@@ -19,7 +20,7 @@
       Correct country! +{{ countryBonus && countryBonus.toLocaleString() }}
       points!
     </div>
-    <div class="map-container">
+    <div :class="`map-container`">
       <div id="map"></div>
     </div>
     <MapMarker
@@ -73,6 +74,8 @@ export default defineComponent({
     gameIsFinished: Boolean,
     distanceAway: String || null,
     countryBonus: Number,
+    showMap: Boolean,
+    gameIsStarted: Boolean,
   },
   watch: {
     distanceAway: function() {
@@ -173,8 +176,6 @@ export default defineComponent({
   align-items: center;
   max-width: 600px;
   height: 400px;
-  left: 50%;
-  transform: translateX(-50%);
 }
 #map {
   position: relative;
@@ -206,7 +207,13 @@ export default defineComponent({
 }
 .country {
   align-items: flex-start;
-  font-size: 24px;
+  font-size: 22px;
+  max-width: 100%;
+  white-space: initial;
+}
+
+.hide {
+  display: none;
 }
 
 .fade-in {
