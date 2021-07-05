@@ -86,7 +86,7 @@ export default defineComponent({
     },
     gameIsFinished: function() {
       if (this.map && this.gameIsFinished) {
-        this.map.flyTo({ center: this.answerLatLng, zoom: 10 });
+        this.map.flyTo({ center: this.answerLatLng, zoom: 8 });
       }
     },
     countryBonus: function() {
@@ -147,7 +147,7 @@ export default defineComponent({
     this.map = new mapbox.Map({
       container: "map",
       style: "mapbox://styles/mapbox/streets-v11",
-      center: [0, 0],
+      center: [0, 20],
       zoom: this.zoom,
       maxZoom: 18,
     });
@@ -165,8 +165,8 @@ export default defineComponent({
 
 <style scoped>
 .outer-container {
-  margin: 16px;
-  width: 600px;
+  margin: 0px 32px 32px 32px;
+  width: 100%;
   position: relative;
 }
 .map-container {
@@ -174,8 +174,8 @@ export default defineComponent({
   position: relative;
   justify-content: center;
   align-items: center;
-  max-width: 600px;
-  height: 400px;
+  width: 100%;
+  height: 68vh;
 }
 #map {
   position: relative;
@@ -183,7 +183,11 @@ export default defineComponent({
   bottom: 0;
   width: 100%;
   height: 100%;
-  border-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-style: solid;
+  border-color: gray;
+  border-width: 1px;
 }
 .updater {
   font-size: 32px;
@@ -222,9 +226,9 @@ export default defineComponent({
 .fade-out {
   opacity: 0;
 }
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 350px) {
   .outer-container {
-    width: 90%;
+    margin: 0px 16px 16px 16px;
   }
 }
 </style>

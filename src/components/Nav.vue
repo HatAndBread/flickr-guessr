@@ -15,8 +15,12 @@ export default defineComponent({
 
 <style scoped>
 .Nav {
-  height: 62px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
   width: 100%;
   background-color: lavender;
+  margin-bottom: 8px;
 }
 </style>

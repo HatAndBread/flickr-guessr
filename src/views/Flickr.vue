@@ -23,7 +23,7 @@
     />
     <div class="image-map-container">
       <Map
-        :zoom="0.1"
+        :zoom="1.5"
         :onMapClick="handleMapClick"
         :answerCoords="answerCoords"
         :showGoal="showGoal"
@@ -37,17 +37,21 @@
       />
       <div class="images-container" v-if="imageUrls.length > 0 && !showMap">
         <div v-if="apiError">There has been an error.</div>
-        <Image
+        <div
+          class="small-image-container"
           v-for="(url, index) in imageUrls"
           :key="index"
-          :src="url.url"
-          :originalItem="url.originalItem"
-          alt="error!"
-          :errorCallback="imageErrorCallback"
-          :showAltOnError="false"
-          :onClick="imageClick"
           v-else
-        />
+        >
+          <Image
+            :src="url.url"
+            :originalItem="url.originalItem"
+            alt="error!"
+            :errorCallback="imageErrorCallback"
+            :showAltOnError="false"
+            :onClick="imageClick"
+          />
+        </div>
       </div>
       <div class="modal large-image-modal" v-if="largeImageUrl">
         <div class="modal-closer" @click="closeModal">x</div>
@@ -287,39 +291,42 @@ export default defineComponent({
 .images-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  width: 100%;
   row-gap: 0;
   column-count: 0;
-  margin: 16px;
+  margin: 0px 32px;
   justify-content: center;
   align-items: center;
-  width: fit-content;
-  height: fit-content;
-  border-radius: 8px;
-  background-color: rgba(50, 50, 50, 0.7);
-  box-shadow: rgba(50, 50, 50, 0.7) 1px 1px 1px 1px;
+  height: 68vh;
+  border-style: solid;
+  border-width: 1px;
+  border-color: gray;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  overflow: hidden;
+}
+.small-image-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 .images-container .Image {
   cursor: pointer;
-  width: 200px;
-  height: 200px;
-  object-fit: contain;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  background-color: lightgray;
+}
+.images-container img {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: 100%;
 }
 
-@media only screen and (max-width: 1000px) {
-  .image-map-container {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-}
-@media only screen and (max-width: 500px) {
-  .images-container .Image {
-    width: 45vw;
-    height: 45vw;
+@media only screen and (max-width: 350px) {
+  .images-container {
+    margin: 0px 16px;
   }
 }
 </style>

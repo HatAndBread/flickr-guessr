@@ -1,7 +1,7 @@
 <template>
   <div class="game-status-container">
     <div class="GameStatus">
-      <div class="lives-container b l br">
+      <div :class="`lives-container b l br`">
         <div class="label">Chances remaining</div>
         <Hearts :lives="lives" />
       </div>
@@ -17,7 +17,7 @@
         <div class="label">Distance</div>
         {{ distanceAway ? parseInt(distanceAway).toLocaleString() : "-- " }} km
       </div>
-      <div class="total-points b r">
+      <div :class="`total-points b r`">
         <div class="label">Points</div>
         <span v-if="points">
           {{
@@ -65,8 +65,11 @@ export default defineComponent({
   justify-content: center;
   font-family: "Amatic SC", monospace;
   font-size: 24px;
+  margin: 0px 32px;
+  border-radius: 8px;
 }
 .b {
+  flex-grow: 1;
   border-style: solid;
   border-color: gray;
   border-width: 1px;
@@ -77,23 +80,32 @@ export default defineComponent({
   align-items: center;
 }
 .l {
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
+  border-top-left-radius: 8px;
 }
 .r {
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-top-right-radius: 8px;
 }
 .br {
   border-right-style: none;
 }
 .label {
   text-decoration: underline;
+  white-space: nowrap;
 }
-@media only screen and (max-width: 500px) {
+
+@media only screen and (max-width: 700px) {
   .b {
     padding: 4px;
-    font-size: 16px;
+    font-size: 14px;
+  }
+}
+@media only screen and (max-width: 350px) {
+  .GameStatus {
+    margin: 0px 16px;
+    padding: 0px;
+  }
+  .b {
+    padding: 8px 0px;
   }
 }
 </style>

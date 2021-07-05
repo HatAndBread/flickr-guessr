@@ -2,7 +2,6 @@
   <div class="Hearts" v-if="typeof lives === 'number'">
     <img :src="heartSrc" alt="♥️" v-for="life in lives" :key="life" />
     <img :src="noFillSrc" alt="🖤" v-for="unLife in 5 - lives" :key="unLife" />
-    <div class="" v-if="!lives">-----</div>
   </div>
 </template>
 
@@ -36,8 +35,8 @@ img {
 }
 @media only screen and (max-width: 800px) {
   img {
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
     margin-left: 2px;
     margin-right: 2px;
   }
