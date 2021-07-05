@@ -6,9 +6,9 @@
     <div class="card-container">
       <game-card
         title="Flickr Guessr"
-        description="Examine four randomally selected photographs from Flickr that were all taken within a 5 kilometer radius of one another. Use context clues and other hints to pinpoint on a map where in the world
+        description="Examine four randomly selected photographs from Flickr that were taken within a 5 kilometer radius of one another. Use context clues and other hints to pinpoint on a map where in the world
         they were taken. Guess within 10 kilometers
-        for mega bounus points!"
+        for mega bonus points!"
         :img="flickrIcon"
         link="flickr-guessr"
       />
