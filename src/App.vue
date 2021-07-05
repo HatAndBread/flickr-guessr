@@ -9,8 +9,7 @@
 import { defineComponent } from "vue";
 import Nav from "./components/Nav.vue";
 import "./globalCss.css";
-console.log("env: ", process.env);
-console.log(process);
+
 export default defineComponent({
   components: {
     Nav,
