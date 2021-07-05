@@ -30,6 +30,9 @@ body {
   cursor: pointer;
   transition: 0.3s;
   font-family: monospace;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 .modal img {
   box-shadow: rgba(30, 30, 30, 0.8) 0px 0px 4px 4px;

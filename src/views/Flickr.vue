@@ -282,6 +282,7 @@ export default defineComponent({
 <style>
 .FlickrGame {
   font-family: "Amatic SC", monospace;
+  margin-bottom: 16px;
 }
 .image-map-container {
   display: flex;
@@ -302,6 +303,7 @@ export default defineComponent({
   border-style: solid;
   border-width: 1px;
   border-color: gray;
+  border-top-style: none;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   overflow: hidden;

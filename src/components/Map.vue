@@ -167,7 +167,14 @@ export default defineComponent({
 .outer-container {
   margin: 0px 32px 32px 32px;
   width: 100%;
+  overflow: hidden;
   position: relative;
+  border-style: solid;
+  border-color: gray;
+  border-top-style: none;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-width: 1px;
 }
 .map-container {
   display: flex;
@@ -176,6 +183,7 @@ export default defineComponent({
   align-items: center;
   width: 100%;
   height: 68vh;
+  overflow: hidden;
 }
 #map {
   position: relative;
@@ -185,9 +193,6 @@ export default defineComponent({
   height: 100%;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
-  border-style: solid;
-  border-color: gray;
-  border-width: 1px;
 }
 .updater {
   font-size: 32px;

@@ -63,6 +63,7 @@ export default defineComponent({
       this.moveMagPos(e);
     },
     handleTouchMove: function(e: TouchEvent) {
+      e.preventDefault();
       const big = this.$refs.bigImage as HTMLImageElement;
       const mag = this.$refs.magnifiedDiv as HTMLDivElement;
       big.style.cursor = "none";
@@ -82,6 +83,7 @@ export default defineComponent({
       mag.style.top = `${y - 130}px`;
     },
     handleTouchDown: function(e: TouchEvent) {
+      e.preventDefault();
       this.magnifiedOpen = true;
       this.handleTouchMove(e);
     },
