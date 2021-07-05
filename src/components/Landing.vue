@@ -1,7 +1,6 @@
 <template>
   <div class="hello">
     <h1 class="landing-title">Games For Geography Geeks</h1>
-    <p class="landing-explanation"></p>
     <Image :src="earth" alt="🌍" width="250" :showAltOnError="false" />
     <div class="card-container">
       <game-card
@@ -50,6 +49,7 @@ h1 {
   color: #5f2892;
 }
 .card-container {
+  margin-top: 16px;
   width: 100%;
   display: flex;
   flex-direction: column;

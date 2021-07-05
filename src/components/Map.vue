@@ -105,7 +105,7 @@ export default defineComponent({
     roundStarted: function() {
       if (this.roundStarted) {
         if (this.map) {
-          this.map.flyTo({ center: [0, 0], zoom: 0 });
+          this.map.flyTo({ center: [0, 0], zoom: 1.5 });
         }
       }
     },

@@ -28,7 +28,7 @@ export default defineComponent({
 
 <style scoped>
 .GameCard {
-  max-width: 600px;
+  max-width: 800px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
