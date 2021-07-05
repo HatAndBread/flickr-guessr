@@ -15,7 +15,7 @@
       </div>
     </div>
     <footer>
-      <div>Made with ❤️ by Joshua Hume.</div>
+      <div>Made with ❤️ by Joshua Hume 🌍</div>
       <div class="footer-links">
         <a href="https://github.com/HatAndBread" target="_blank">
           <img :src="gitIcon" alt="GitHub" />
@@ -64,10 +64,11 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .landing-main {
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 60px);
 }
 h1 {
   color: #5f2892;
+  margin: 8px;
 }
 .card-container {
   margin-top: 16px;

@@ -1,26 +1,36 @@
 <template>
   <div class="Nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/flickr-guessr">Flickr Guessr</router-link>
+    <router-link to="/"
+      ><Image :src="earth" alt="🌍" width="32" class="earth"
+    /></router-link>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import Image from "./Image.vue";
+import earth from "@/assets/planet-earth.svg";
 
 export default defineComponent({
   name: "Nav",
+  data: function() {
+    return { earth };
+  },
+  components: {
+    Image,
+  },
 });
 </script>
 
 <style scoped>
 .Nav {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  height: 48px;
   width: 100%;
-  background-color: lavender;
   margin-bottom: 8px;
+}
+.earth {
+  margin: 8px;
 }
 </style>
