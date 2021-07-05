@@ -158,9 +158,6 @@ export default defineComponent({
     const handleMapClick = async (lngLat: { lat: number; lng: number }) => {
       if (roundStarted.value) {
         showGuess.value = true;
-        console.log(
-          `answer country: ${answerCountryCode.value} \n answer coords: ${answerCoords.value.lat}, ${answerCoords.value.lng}`
-        );
         const countryCode = await getCountryCode(lngLat);
         if (
           countryCode === answerCountryCode.value &&

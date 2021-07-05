@@ -19,13 +19,11 @@ export default defineComponent({
       () => [props.coords, marker],
       () => {
         if (marker.value && props.coords) {
-          console.log(props.coords);
           marker.value.setLngLat(props.coords);
         }
       }
     );
     onMounted(function() {
-      console.log(props.coords);
       if (props.map && markerRef.value && props.coords) {
         marker.value = new mapbox.Marker(markerRef.value, {
           offset: [0, -25],
